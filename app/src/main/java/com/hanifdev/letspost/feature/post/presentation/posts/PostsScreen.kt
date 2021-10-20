@@ -29,7 +29,6 @@ fun PostsScreen(
     val scaffoldState = rememberScaffoldState()
     val state = viewModel.state.value
     val pagestate = viewModel.pageState
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton = {

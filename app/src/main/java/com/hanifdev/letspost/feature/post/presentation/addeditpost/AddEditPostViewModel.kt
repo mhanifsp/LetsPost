@@ -98,6 +98,8 @@ class AddEditPostViewModel@Inject constructor(
 
                         }
                 }
+            }else{
+                _pageState.value = PageState.DATA
             }
         }
     }
