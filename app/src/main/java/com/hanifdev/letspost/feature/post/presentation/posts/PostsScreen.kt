@@ -29,7 +29,6 @@ fun PostsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Log.e("Hanif", "hehe")
                     navController.navigate(Screens.AddEditPostScreen.route)
                 }
             ) {
@@ -44,7 +43,7 @@ fun PostsScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Your note",
+                text = "Lets Post",
                 style = MaterialTheme.typography.h4
             )
             Spacer(modifier = Modifier.height(16.dp))

@@ -1,9 +1,11 @@
 package com.hanifdev.letspost.feature.post.presentation.postdetails
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,44 +21,65 @@ fun PostDetailsScreen(
     viewModel: PostDetailsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .padding(end = 32.dp)
     ) {
-        Text(
-            text = state.title,
-            style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.onSurface,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = state.content,
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onSurface,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .weight(1F)
+        ) {
+            Text(
+                text = state.title,
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onSurface,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Published : ${state.publishedAt}")
+            Text(text = "Updated : ${state.updatedAt}")
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = state.content,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onSurface,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
 
-    ) {
-        Button(onClick = {
-            if (state.id != -1L) {
-                navController.navigate(
-                    Screens.AddEditPostScreen.route +
-                            "?id=${state.id}"
-                )
+        ) {
+            Button(
+                onClick = {
+                    if (state.id != -1L) {
+                        navController.navigate(
+                            Screens.AddEditPostScreen.route +
+                                    "?id=${state.id}"
+                        )
+                    }
+                },
+                modifier = Modifier.weight(1F)
+            ){
+                Text("Edit")
             }
-        }){}
+            
+            Spacer(modifier = Modifier.width(10.dp))
 
-        Button(onClick = {
-            navController.navigateUp()
-        }) {}
+            Button(
+                onClick = {
+                    navController.navigateUp()
+                },
+                modifier = Modifier.weight(1F)
+            ) {
+                Text(text = "Delete")
+            }
 
+        }
     }
 }

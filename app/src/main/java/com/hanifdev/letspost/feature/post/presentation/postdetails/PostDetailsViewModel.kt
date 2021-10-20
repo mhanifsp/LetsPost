@@ -38,7 +38,9 @@ class PostDetailsViewModel @Inject constructor(
                                 is BaseResult.Success -> {
                                     _state.value = state.value.copy(
                                         title = baseResult.data.title,
-                                        content = baseResult.data.content
+                                        content = baseResult.data.content,
+                                        publishedAt = baseResult.data.published_at,
+                                        updatedAt = baseResult.data.updated_at
                                     )
                                 }
                                 is BaseResult.Error -> {
