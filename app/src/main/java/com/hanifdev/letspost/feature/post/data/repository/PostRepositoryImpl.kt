@@ -37,9 +37,9 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun addPost(post: Post): Flow<BaseResult<Post, Int>> {
+    override suspend fun addPost(post: ApiPostBody): Flow<BaseResult<Post, Int>> {
         return flow{
-            val response = api.getPostById(post.id.toLong())
+            val response = api.addPost(post)
             if(response.isSuccessful){
                 val body = response.body()!!
                 emit(BaseResult.Success(body))
@@ -50,10 +50,9 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun deletePost(post: Post): Flow<BaseResult<Post, Int>> {
+    override suspend fun deletePost(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>> {
         return flow{
-            val body = ApiPostBody(post.title, post.content)
-            val response = api.deletePost(post.id.toLong(), body)
+            val response = api.deletePost(id, post)
             if(response.isSuccessful){
                 val body = response.body()!!
                 emit(BaseResult.Success(body))
@@ -64,10 +63,9 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun updatePost(post: Post): Flow<BaseResult<Post, Int>> {
+    override suspend fun updatePost(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>> {
         return flow{
-            val body = ApiPostBody(post.title, post.content)
-            val response = api.updatePost(post.id.toLong(), body)
+            val response = api.updatePost(id, post)
             if(response.isSuccessful){
                 val body = response.body()!!
                 emit(BaseResult.Success(body))

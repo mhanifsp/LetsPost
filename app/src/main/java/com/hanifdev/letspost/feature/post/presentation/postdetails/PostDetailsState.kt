@@ -1,9 +1,7 @@
 package com.hanifdev.letspost.feature.post.presentation.postdetails
 
+import com.hanifdev.letspost.feature.post.domain.model.Post
+
 data class PostDetailsState (
-    val id: Long = -1,
-    val title: String = "",
-    val content: String = "",
-    val updatedAt: String = "",
-    val publishedAt: String = ""
+    val post: Post = Post("", "",-1L,"", "","")
 )

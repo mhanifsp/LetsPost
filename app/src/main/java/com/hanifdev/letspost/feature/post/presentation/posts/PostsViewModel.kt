@@ -31,13 +31,7 @@ class PostsViewModel @Inject constructor(
         job?.cancel()
         job = viewModelScope.launch {
             postsUseCase.getPosts()
-                .onStart {
-//                    setLoading()
-                }
-                .catch { exception ->
-//                    hideLoading()
-//                    showToast(exception.message.toString())
-                }.collect { baseResult ->
+                .collect { baseResult ->
 
                     when(baseResult){
                         is BaseResult.Success -> {
