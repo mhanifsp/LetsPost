@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.hanifdev.letspost.feature.post.domain.BaseResult
 import com.hanifdev.letspost.feature.post.domain.model.ApiPostBody
 import com.hanifdev.letspost.feature.post.domain.usecase.PostsUseCases
+import com.hanifdev.letspost.feature.post.presentation.common.pagestate.PageState
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -25,10 +26,17 @@ class AddEditPostViewModel@Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private val _pageState = mutableStateOf(PageState.IDLE)
+    val pageState: State<PageState> = _pageState
+
+    val id: Int? = savedStateHandle.get<Int>("id")
+
     init{
-        savedStateHandle.get<Int>("id")?.let{ id ->
-            getPostById(id.toLong())
-        }
+        getPostById()
+    }
+
+    fun retry(){
+        getPostById()
     }
 
     fun onEvent(events: AddEditPostEvents){
@@ -61,25 +69,35 @@ class AddEditPostViewModel@Inject constructor(
         }
     }
 
-    private fun getPostById(id: Long){
-        if(id != -1L) {
-            viewModelScope.launch {
-                postsUseCase.getPostById(id)
-                    .collect { baseResult ->
-                        when(baseResult){
-                            is BaseResult.Success -> {
-                                _state.value = state.value.copy(
-                                    id = baseResult.data.id.toLong(),
-                                    title = baseResult.data.title,
-                                    content = baseResult.data.content
-                                )
-                            }
-                            is BaseResult.Error -> {
+    fun setLoading(){
+        _pageState.value = PageState.LOADING
+    }
 
-                            }
+    private fun getPostById(){
+        id?.let {
+            if (id != -1) {
+                viewModelScope.launch {
+                    postsUseCase.getPostById(id.toLong())
+                        .onStart {
+                            setLoading()
                         }
+                        .collect { baseResult ->
+                            when (baseResult) {
+                                is BaseResult.Success -> {
+                                    _pageState.value = PageState.DATA
+                                    _state.value = state.value.copy(
+                                        id = baseResult.data.id.toLong(),
+                                        title = baseResult.data.title,
+                                        content = baseResult.data.content
+                                    )
+                                }
+                                is BaseResult.Error -> {
+                                    _pageState.value = PageState.ERROR
+                                }
+                            }
 
-                    }
+                        }
+                }
             }
         }
     }

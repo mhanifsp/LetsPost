@@ -9,12 +9,16 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hanifdev.letspost.feature.post.presentation.Screens
+import com.hanifdev.letspost.feature.post.presentation.common.pagestate.WithPageState
+import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterialApi
 @Composable
@@ -24,6 +28,8 @@ fun PostsScreen(
 ){
     val scaffoldState = rememberScaffoldState()
     val state = viewModel.state.value
+    val pagestate = viewModel.pageState
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton = {
@@ -37,36 +43,41 @@ fun PostsScreen(
         },
         scaffoldState = scaffoldState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        WithPageState(
+            pageState = pagestate,
+            onRetry = { viewModel.retry() }
         ) {
-            Text(
-                text = "Lets Post",
-                style = MaterialTheme.typography.h4
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                items(state.posts) { post ->
-                    PostItem(
-                        post = post,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            navController.navigate(
-                                Screens.PostDetailsScreen.route +
-                                        "?id=${post.id}"
-                            ){
-                                popUpTo(Screens.PostsScreen.route) {
-                                    inclusive = true
+                Text(
+                    text = "Lets Post",
+                    style = MaterialTheme.typography.h4
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(state.posts) { post ->
+                        PostItem(
+                            post = post,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                navController.navigate(
+                                    Screens.PostDetailsScreen.route +
+                                            "?id=${post.id}"
+                                ){
+                                    popUpTo(Screens.PostsScreen.route) {
+                                        inclusive = true
+                                    }
                                 }
                             }
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
         }

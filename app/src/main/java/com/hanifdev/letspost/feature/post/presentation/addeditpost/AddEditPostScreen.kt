@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hanifdev.letspost.feature.post.presentation.Screens
+import com.hanifdev.letspost.feature.post.presentation.common.pagestate.WithPageState
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -24,6 +25,7 @@ fun AddEditPostScreen(
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
+    val pagestate = viewModel.pageState
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -54,35 +56,40 @@ fun AddEditPostScreen(
         },
         scaffoldState = scaffoldState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(scrollState)
+        WithPageState(
+            pageState = pagestate,
+            onRetry = { viewModel.retry() }
         ) {
-            TextField(
-                value = state.title,
-                label = {
-                    Text(text = "Title")
-                },
-                onValueChange = {
-                    viewModel.onEvent(AddEditPostEvents.EnteredTitle(it))
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            TextField(
-                value = state.content,
-                label = {
-                    Text(text = "Content")
-                },
-                onValueChange = {
-                    viewModel.onEvent(AddEditPostEvents.EnteredContent(it))
-                },
+            Column(
                 modifier = Modifier
-                    .weight(1F)
-                    .fillMaxWidth()
-            )
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                TextField(
+                    value = state.title,
+                    label = {
+                        Text(text = "Title")
+                    },
+                    onValueChange = {
+                        viewModel.onEvent(AddEditPostEvents.EnteredTitle(it))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(
+                    value = state.content,
+                    label = {
+                        Text(text = "Content")
+                    },
+                    onValueChange = {
+                        viewModel.onEvent(AddEditPostEvents.EnteredContent(it))
+                    },
+                    modifier = Modifier
+                        .weight(1F)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
