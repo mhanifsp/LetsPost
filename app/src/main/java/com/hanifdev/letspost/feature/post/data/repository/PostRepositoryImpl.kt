@@ -16,67 +16,86 @@ class PostRepositoryImpl(
 ) : PostRepository{
     override fun getPosts(): Flow<BaseResult<List<Post>, Int>> {
         return flow{
-            val response = api.getPosts()
-            if(response.isSuccessful){
-                val body = response.body()!!
-                emit(BaseResult.Success(body))
-            }else{
-                val errCode = response.code()
-                emit(BaseResult.Error(errCode))
+            try {
+                val response = api.getPosts()
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body))
+                } else {
+                    val errCode = response.code()
+                    emit(BaseResult.Error(errCode))
+                }
+            }catch(e: Exception) {
+                emit(BaseResult.Error(-1))
             }
+
         }
     }
 
     override suspend fun getPostById(id: Long): Flow<BaseResult<Post, Int>> {
         return flow{
-            val response = api.getPostById(id)
-            if(response.isSuccessful){
-                val body = response.body()!!
-                emit(BaseResult.Success(body))
-            }else{
-                val errCode = response.code()
-                emit(BaseResult.Error(errCode))
+            try {
+                val response = api.getPostById(id)
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body))
+                } else {
+                    val errCode = response.code()
+                    emit(BaseResult.Error(errCode))
+                }
+            }catch(e: Exception) {
+                emit(BaseResult.Error(-1))
             }
         }
     }
 
     override suspend fun addPost(post: ApiPostBody): Flow<BaseResult<Post, Int>> {
         return flow{
-            val response = api.addPost(post)
-            if(response.isSuccessful){
-                val body = response.body()!!
-                emit(BaseResult.Success(body))
-            }else{
-                val errCode = response.code()
-                emit(BaseResult.Error(errCode))
+            try {
+                val response = api.addPost(post)
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body))
+                } else {
+                    val errCode = response.code()
+                    emit(BaseResult.Error(errCode))
+                }
+            }catch(e: Exception) {
+                emit(BaseResult.Error(-1))
             }
         }
     }
 
     override suspend fun deletePost(id: Long): Flow<BaseResult<Post, Int>> {
         return flow{
-            val response = api.deletePost(id)
-            if(response.isSuccessful){
-                val body = response.body()!!
-                emit(BaseResult.Success(body))
-            }else{
-                val errCode = response.code()
-                emit(BaseResult.Error(errCode))
+            try {
+                val response = api.deletePost(id)
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body))
+                } else {
+                    val errCode = response.code()
+                    emit(BaseResult.Error(errCode))
+                }
+            }catch(e: Exception) {
+                emit(BaseResult.Error(-1))
             }
         }
     }
 
     override suspend fun updatePost(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>> {
-        Log.e("hehe", "tes")
         return flow{
-            val response = api.updatePost(id, post)
-            if(response.isSuccessful){
-                val body = response.body()!!
-                emit(BaseResult.Success(body))
-            }else{
-                val errCode = response.code()
-                Log.e("Hanif", "$errCode")
-                emit(BaseResult.Error(errCode))
+            try {
+                val response = api.updatePost(id, post)
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body))
+                } else {
+                    val errCode = response.code()
+                    emit(BaseResult.Error(errCode))
+                }
+            }catch(e: Exception) {
+                emit(BaseResult.Error(-1))
             }
         }
     }

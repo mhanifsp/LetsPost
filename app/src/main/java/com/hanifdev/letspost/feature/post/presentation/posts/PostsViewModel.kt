@@ -21,9 +21,6 @@ class PostsViewModel @Inject constructor(
     private val _state = mutableStateOf(PostsState())
     val state: State<PostsState> = _state
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
     private val _pageState = mutableStateOf(PageState.IDLE)
     val pageState: State<PageState> = _pageState
 
@@ -59,16 +56,11 @@ class PostsViewModel @Inject constructor(
                         }
                         is BaseResult.Error -> {
                             _pageState.value = PageState.ERROR
-                            _eventFlow.emit(UiEvent.IsError(true))
                         }
                     }
 
                 }
 
         }
-    }
-
-    sealed class UiEvent {
-        data class IsError(val value: Boolean): UiEvent()
     }
 }

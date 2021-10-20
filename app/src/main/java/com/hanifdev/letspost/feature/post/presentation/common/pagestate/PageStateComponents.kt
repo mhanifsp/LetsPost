@@ -44,7 +44,7 @@ fun ErrorView(message: String = "Oops! Something went wrong, Please refresh afte
         ErrorText(message)
         Spacer(modifier = Modifier.height(10.dp))
         Button(onClick = onRetry) {
-
+            Text(text = "Retry")
         }
     }
 }
