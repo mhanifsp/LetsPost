@@ -8,6 +8,7 @@ import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hanifdev.letspost.feature.post.presentation.Screens
+import com.hanifdev.letspost.feature.post.presentation.addeditpost.AddEditPostViewModel
 import com.hanifdev.letspost.feature.post.presentation.posts.PostsViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PostDetailsScreen(
@@ -27,6 +30,22 @@ fun PostDetailsScreen(
     val state = viewModel.state.value
     val scrollState = rememberScrollState()
     val openDialog = remember { mutableStateOf(false)}
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is PostDetailsViewModel.UiEvent.DeletePost -> {
+                    navController.navigate(
+                        Screens.PostsScreen.route
+                    ){
+                        popUpTo(Screens.PostDetailsScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -66,7 +85,11 @@ fun PostDetailsScreen(
                         navController.navigate(
                             Screens.AddEditPostScreen.route +
                                     "?id=${state.post.id}"
-                        )
+                        ){
+                            popUpTo(Screens.PostDetailsScreen.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.weight(1F)
@@ -79,7 +102,6 @@ fun PostDetailsScreen(
             Button(
                 onClick = {
                     openDialog.value = true
-                    navController.navigateUp()
                 },
                 modifier = Modifier.weight(1F)
             ) {
@@ -101,7 +123,7 @@ fun PostDetailsScreen(
                         onClick = {
                             openDialog.value = false
                             viewModel.deletePost(state.post)
-                            navController.navigateUp()
+//                            navController.navigateUp()
                         },
                         colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Red,

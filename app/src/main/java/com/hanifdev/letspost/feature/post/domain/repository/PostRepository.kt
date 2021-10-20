@@ -13,7 +13,7 @@ interface PostRepository {
 
     suspend fun addPost(post: ApiPostBody): Flow<BaseResult<Post, Int>>
 
-    suspend fun deletePost(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>>
+    suspend fun deletePost(id: Long): Flow<BaseResult<Post, Int>>
 
     suspend fun updatePost(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>>
 

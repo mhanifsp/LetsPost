@@ -59,7 +59,11 @@ fun PostsScreen(
                             navController.navigate(
                                 Screens.PostDetailsScreen.route +
                                         "?id=${post.id}"
-                            )
+                            ){
+                                popUpTo(Screens.PostsScreen.route) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))

@@ -7,7 +7,7 @@ import com.hanifdev.letspost.feature.post.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
 
 class DeletePost (private val repo: PostRepository) {
-    suspend operator fun invoke(id: Long, post: ApiPostBody): Flow<BaseResult<Post, Int>> {
-        return repo.deletePost(id, post)
+    suspend operator fun invoke(id: Long): Flow<BaseResult<Post, Int>> {
+        return repo.deletePost(id)
     }
 }

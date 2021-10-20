@@ -7,11 +7,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.hanifdev.letspost.feature.post.presentation.Screens
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddEditPostScreen(
@@ -21,6 +24,22 @@ fun AddEditPostScreen(
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is AddEditPostViewModel.UiEvent.SavePost -> {
+                    navController.navigate(
+                        Screens.PostsScreen.route
+                    ){
+                        popUpTo(Screens.AddEditPostScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(
         floatingActionButton = {

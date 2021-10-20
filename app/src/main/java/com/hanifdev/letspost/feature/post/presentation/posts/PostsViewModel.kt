@@ -8,9 +8,7 @@ import com.hanifdev.letspost.feature.post.domain.BaseResult
 import com.hanifdev.letspost.feature.post.domain.usecase.PostsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,23 +27,20 @@ class PostsViewModel @Inject constructor(
 
     private fun getPosts() {
         job?.cancel()
-        job = viewModelScope.launch {
-            postsUseCase.getPosts()
-                .collect { baseResult ->
+        job = postsUseCase.getPosts()
+            .onEach { baseResult ->
 
-                    when(baseResult){
-                        is BaseResult.Success -> {
-                            _state.value = state.value.copy(
-                                posts = baseResult.data
-                            )
-                        }
-                        is BaseResult.Error -> {
-
-                        }
+                when(baseResult){
+                    is BaseResult.Success -> {
+                        _state.value = state.value.copy(
+                            posts = baseResult.data
+                        )
                     }
+                    is BaseResult.Error -> {
 
+                    }
                 }
 
-        }
+            }.launchIn(viewModelScope)
     }
 }

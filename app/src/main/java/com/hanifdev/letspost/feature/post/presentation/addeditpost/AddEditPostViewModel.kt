@@ -10,9 +10,7 @@ import com.hanifdev.letspost.feature.post.domain.model.ApiPostBody
 import com.hanifdev.letspost.feature.post.domain.usecase.PostsUseCases
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +21,9 @@ class AddEditPostViewModel@Inject constructor(
 ): ViewModel() {
     private val _state = mutableStateOf(AddEditPostState())
     val state: State<AddEditPostState> = _state
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init{
         savedStateHandle.get<Int>("id")?.let{ id ->
@@ -47,13 +48,14 @@ class AddEditPostViewModel@Inject constructor(
                     if (state.value.id == -1L){
                         postsUseCase.addPost(
                             ApiPostBody(state.value.title, state.value.content)
-                        )
+                        ).collect()
                     } else {
                         postsUseCase.updatePost(
                             state.value.id,
                             ApiPostBody(state.value.title, state.value.content)
-                        )
+                        ).collect()
                     }
+                    _eventFlow.emit(UiEvent.SavePost)
                 }
             }
         }
@@ -82,9 +84,7 @@ class AddEditPostViewModel@Inject constructor(
         }
     }
 
-    fun updatePost(id: Long, post: ApiPostBody){
-        viewModelScope.launch {
-            postsUseCase.updatePost(id, post)
-        }
+    sealed class UiEvent {
+        object SavePost: UiEvent()
     }
 }

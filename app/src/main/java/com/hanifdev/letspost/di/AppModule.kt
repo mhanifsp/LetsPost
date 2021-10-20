@@ -1,9 +1,6 @@
 package com.hanifdev.letspost.di
 
 import com.hanifdev.letspost.BuildConfig
-import com.hanifdev.letspost.feature.post.data.repository.PostRepositoryImpl
-import com.hanifdev.letspost.feature.post.data.source.RetrofitService
-import com.hanifdev.letspost.feature.post.domain.repository.PostRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -29,10 +26,12 @@ object AppModule {
     @Singleton
     @Provides
     fun providesOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
-        OkHttpClient
-            .Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
+        OkHttpClient.Builder().apply {
+            connectTimeout(60, TimeUnit.SECONDS)
+            readTimeout(60, TimeUnit.SECONDS)
+            writeTimeout(60, TimeUnit.SECONDS)
+            addInterceptor(httpLoggingInterceptor)
+        }.build()
 
     @Provides
     @Singleton

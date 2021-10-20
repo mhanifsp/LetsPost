@@ -9,15 +9,15 @@ interface RetrofitService {
     @GET("posts")
     suspend fun getPosts(): Response<List<Post>>
 
-    @GET("posts/{id}")
+    @GET("posts/{id}/")
     suspend fun getPostById(@Path("id") id: Long): Response<Post>
 
-    @POST("posts")
+    @POST("posts/")
     suspend fun addPost(@Body body: ApiPostBody): Response<Post>
 
-    @PUT("posts/{id}")
+    @PUT("posts/{id}/")
     suspend fun updatePost(@Path("id") id: Long, @Body body: ApiPostBody): Response<Post>
 
-    @DELETE("posts/{id}")
-    suspend fun deletePost(@Path("id") id: Long, @Body body: ApiPostBody): Response<Post>
+    @DELETE("posts/{id}/")
+    suspend fun deletePost(@Path("id") id: Long): Response<Post>
 }

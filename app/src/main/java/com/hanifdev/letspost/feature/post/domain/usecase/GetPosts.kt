@@ -6,7 +6,7 @@ import com.hanifdev.letspost.feature.post.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetPosts (private val repo: PostRepository) {
-    suspend operator fun invoke() : Flow<BaseResult<List<Post>, Int>> {
+    operator fun invoke() : Flow<BaseResult<List<Post>, Int>> {
         return repo.getPosts()
     }
 }

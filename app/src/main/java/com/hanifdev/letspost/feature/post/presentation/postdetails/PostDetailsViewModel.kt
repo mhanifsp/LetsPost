@@ -9,10 +9,9 @@ import com.hanifdev.letspost.feature.post.domain.BaseResult
 import com.hanifdev.letspost.feature.post.domain.model.ApiPostBody
 import com.hanifdev.letspost.feature.post.domain.model.Post
 import com.hanifdev.letspost.feature.post.domain.usecase.PostsUseCases
+import com.hanifdev.letspost.feature.post.presentation.addeditpost.AddEditPostViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +23,9 @@ class PostDetailsViewModel @Inject constructor(
     private val _state = mutableStateOf(PostDetailsState())
     val state: State<PostDetailsState> = _state
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     init {
         savedStateHandle.get<Int>("id")?.let{ id ->
             getPostById(id.toLong())
@@ -33,9 +35,9 @@ class PostDetailsViewModel @Inject constructor(
     fun deletePost(post: Post) {
         viewModelScope.launch {
             postsUseCase.deletePost(
-                post.id,
-                ApiPostBody(post.title, post.content)
-            )
+                post.id
+            ).collect()
+            _eventFlow.emit(UiEvent.DeletePost)
         }
     }
 
@@ -56,9 +58,12 @@ class PostDetailsViewModel @Inject constructor(
                         }
                     }
             }
+
         }
     }
 
-
+    sealed class UiEvent {
+        object DeletePost: UiEvent()
+    }
 
 }

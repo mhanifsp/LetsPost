@@ -1,6 +1,8 @@
 package com.hanifdev.letspost.feature.post.domain.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ApiPostBody(
-    val title: String,
-    val content: String
+    @SerializedName("title") val title: String,
+    @SerializedName("content") val content: String
 )
