@@ -12,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hanifdev.letspost.feature.post.presentation.Screens
+import com.hanifdev.letspost.feature.post.presentation.common.observeAsSate
 import com.hanifdev.letspost.feature.post.presentation.common.pagestate.WithPageState
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +31,9 @@ fun PostsScreen(
     val scaffoldState = rememberScaffoldState()
     val state = viewModel.state.value
     val pagestate = viewModel.pageState
+
+    val lifeCycleState = LocalLifecycleOwner.current.lifecycle.observeAsSate()
+    val state2 = lifeCycleState.value
 
     Scaffold(
         floatingActionButton = {
@@ -68,11 +73,7 @@ fun PostsScreen(
                                 navController.navigate(
                                     Screens.PostDetailsScreen.route +
                                             "?id=${post.id}"
-                                ){
-                                    popUpTo(Screens.PostsScreen.route) {
-                                        inclusive = true
-                                    }
-                                }
+                                )
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
