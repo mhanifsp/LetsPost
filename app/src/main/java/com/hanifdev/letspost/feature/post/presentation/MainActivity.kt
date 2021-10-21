@@ -9,11 +9,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.hanifdev.letspost.feature.post.presentation.addeditpost.AddEditPostScreen
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsScreen
 import com.hanifdev.letspost.feature.post.presentation.posts.PostsScreen
@@ -25,49 +27,52 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             LetsPostTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screens.PostsScreen.route
-                    ) {
-                        composable(route = Screens.PostsScreen.route) {
-                            PostsScreen(navController = navController)
-                        }
-                        composable(
-                            route = Screens.AddEditPostScreen.route +
-                                    "?id={id}",
-                            arguments = listOf(
-                                navArgument(
-                                    name = "id"
-                                ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                },
-                            )
+                ProvideWindowInsets {
+                    // A surface container using the 'background' color from the theme
+                    Surface(color = MaterialTheme.colors.background) {
+                        val navController = rememberNavController()
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screens.PostsScreen.route
                         ) {
-                            AddEditPostScreen(
-                                navController = navController
-                            )
-                        }
-                        composable(
-                            route = Screens.PostDetailsScreen.route +
-                                    "?id={id}",
-                            arguments = listOf(
-                                navArgument(
-                                    name = "id"
-                                ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                },
-                            )
-                        ) {
-                            PostDetailsScreen(
-                                navController = navController
-                            )
+                            composable(route = Screens.PostsScreen.route) {
+                                PostsScreen(navController = navController)
+                            }
+                            composable(
+                                route = Screens.AddEditPostScreen.route +
+                                        "?id={id}",
+                                arguments = listOf(
+                                    navArgument(
+                                        name = "id"
+                                    ) {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    },
+                                )
+                            ) {
+                                AddEditPostScreen(
+                                    navController = navController
+                                )
+                            }
+                            composable(
+                                route = Screens.PostDetailsScreen.route +
+                                        "?id={id}",
+                                arguments = listOf(
+                                    navArgument(
+                                        name = "id"
+                                    ) {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    },
+                                )
+                            ) {
+                                PostDetailsScreen(
+                                    navController = navController
+                                )
+                            }
                         }
                     }
                 }

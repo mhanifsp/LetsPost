@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.hanifdev.letspost.feature.post.presentation.Screens
 import com.hanifdev.letspost.feature.post.presentation.common.pagestate.WithPageState
 import com.hanifdev.letspost.feature.post.presentation.postdetails.PostDetailsViewModel
@@ -64,6 +65,7 @@ fun AddEditPostScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+                    .navigationBarsWithImePadding()
                     .verticalScroll(scrollState)
             ) {
                 OutlinedTextField(
