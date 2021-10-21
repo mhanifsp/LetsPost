@@ -66,7 +66,7 @@ fun AddEditPostScreen(
                     .padding(16.dp)
                     .verticalScroll(scrollState)
             ) {
-                TextField(
+                OutlinedTextField(
                     value = state.title,
                     label = {
                         Text(text = "Title")
@@ -77,7 +77,7 @@ fun AddEditPostScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = state.content,
                     label = {
                         Text(text = "Content")
